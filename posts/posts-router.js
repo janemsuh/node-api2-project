@@ -93,15 +93,15 @@ router.get('/:id/comments', async (req, res) => {
 });
 
 // This handles the route 'DELETE /posts/:id'
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const post = db.findById(req.params.id);
+        const post = await db.findById(req.params.id);
         if (post) {
-            db.findById(req.params.id);
+            await db.findById(req.params.id);
             res.status(200).json({
                 message: 'The post has been removed.'
             });
-            db.remove(req.params.id);
+            await db.remove(req.params.id);
         } else {
             res.status(404).json({
                 message: 'The post with the specified ID does not exist.'
@@ -115,16 +115,16 @@ router.delete('/:id', (req, res) => {
 });
 
 // This handles the route 'PUT /posts/:id'
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
-        const post = db.findById(req.params.id);
+        const post = await db.findById(req.params.id);
         if (!req.body.title || !req.body.contents) {
             res.status(400).json({
                 message: 'Please provide title and contents for the post.'
             });
         }
         if (post) {
-            db.update(req.params.id, req.body);
+            await db.update(req.params.id, req.body);
             res.status(200).json(req.body);
         } else {
             res.status(404).json({
