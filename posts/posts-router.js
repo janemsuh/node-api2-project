@@ -21,24 +21,23 @@ router.post('/', (req, res) => {
 });
 
 // This handles the route 'POST /posts/:id/comments'
-router.post('/:id/comments', (req, res) => {
+router.post('/:id/comments', async (req, res) => {
     try {
         if (!req.body.text) {
             res.status(400).json({
                 message: 'Please provide text for the comment.'
             });
-        } else {
-            const post = db.findById(req.param.id);
-            if (post) {
-                db.insertComment(req.body);
-                res.status(201).json(req.body);
-            } else {
-                res.status(404).json({
-                    message: 'The post with the specified ID does not exist.'
-                });
-            }
         }
-    } catch {
+        const post = await db.findById(req.param.id);
+        if (post) {
+            db.insertComment(req.body)
+            res.status(201).json(req.body.text);
+        } else {
+            res.status(404).json({
+                message: 'The post with the specified ID does not exist.'
+            });
+        }
+    } catch (error) {
         res.status(500).json({
             message: 'There was an error while saving the comment to the database.'
         });
