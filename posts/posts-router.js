@@ -46,9 +46,9 @@ router.post('/:id/comments', (req, res) => {
 });
 
 // This handles the route 'GET /posts'
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        res.json(db.find());
+        res.json(await db.find());
     } catch {
         res.status(500).json({
             message: 'The posts information could not be retrieved.'
@@ -57,9 +57,9 @@ router.get('/', (req, res) => {
 });
 
 // This handles the route 'GET /posts/:id'
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const post = db.findById(req.params.id);
+        const post = await db.findById(req.params.id);
         if (post) {
             res.status(201).json(post);
         } else {
@@ -75,11 +75,11 @@ router.get('/:id', (req, res) => {
 });
 
 // This handles the route 'GET /posts/:id/comments'
-router.get('/:id/comments', (req, res) => {
+router.get('/:id/comments', async (req, res) => {
     try {
-        const post = db.findById(req.params.id);
+        const post = await db.findById(req.params.id);
         if (post) {
-            const comments = db.findPostComments(req.params.id);
+            const comments = await db.findPostComments(req.params.id);
             res.status(201).json(comments);
         } else {
             res.status(404).json({
